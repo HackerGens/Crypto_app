@@ -1,27 +1,6 @@
 <resources>
-    <string name="app_name">Metamask</string>
-    <string name="privateintro">Private and secure</string>
-    <string name="privatekeyintro">Private key never leave your device</string>
-    <string name="haveawallet">I Already have a wallet</string>
-    <string name="backuptitle">Back up your wallet now!</string>
-    <string name="backupdes">In the next step you will see 12 words taht allows you to recover a wallet.</string>
-    <string name="understand">I understand that if I lose my recovery words,I will not be able to access my wallet.</string>
-    <string name="phrasetitle">Your recovery phrase</string>
-    <string name="phrasedes">Write down or copy these words in the right order and them somewhere safe.</string>
-    <string name="verifyphrasetitle">Verify recovery phrase</string>
-    <string name="verifyphrasedes">Tap the word to put them next to each other in the correct order.</string>
-    <string name="info">Never share recovery phrase with anyone,store it securely!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Coming soon</string>
-    <string name="ex_hello_blank_fragment">Exchange fragment coming soon</string>
-    <string name="tokenTitle">Bitcoin(BTC)</string>
-    <string name="Transinfo">Transactions will appear here</string>
-    <string name="tokenRecive">Recive BTC</string>
-    <string name="sendcoininfo1">Send only Bitcoin to this address.</string>
-    <string name="sendcoininfo2">Sending anyother coins may result in payment loss.</string>
-    <string name="rencode">ABCDEFGHJKLMNPQRSTUVXYZabcdefghijkmnopqrstuvxyz23456789</string>
-    <string name="priceAlertdes">Get alert for significant price changes of your favrite cryptocurrencies</string>
-    <string name="joincommunity">Join Community</string>
-
-
+    <string name="app_name">Cointa</string>
+    <string name="fevbyuser">Top coins searched by users.</string>
+    <string name="SomethingWrong">Oops! Some thing went wrong.</string>
+    <string name="topcoins">Top coins</string>
 </resources>

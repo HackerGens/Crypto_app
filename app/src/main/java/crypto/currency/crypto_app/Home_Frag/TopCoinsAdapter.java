@@ -46,7 +46,9 @@ public class TopCoinsAdapter extends RecyclerView.Adapter<TopCoinsAdapter.MyView
         Top_coins_model album = coinsList.get(position);
         holder.coins_name.setText(album.getCoins_title());
         holder.coins_price.setText(album.getCoins_Totalprice());
-        holder.coins_Btcprice.setText(album.getCoins_price_btc());
+        //+" BTC"
+        Double d_btc = Double.valueOf(album.getCoins_price_btc());
+        holder.coins_Btcprice.setText(String.format("%.8f", d_btc)+" BTC");
         holder.coinsSymbol.setText(album.getCoins_symbol());
 
         Picasso.Builder builder = new Picasso.Builder(mContext);

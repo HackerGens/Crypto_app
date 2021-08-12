@@ -2,5 +2,5 @@
     <string name="app_name">Cointa</string>
     <string name="fevbyuser">Top coins searched by users.</string>
     <string name="SomethingWrong">Oops! Some thing went wrong.</string>
-    <string name="topcoins">Top coins</string>
+    <string name="topcoins">All coins</string>
 </resources>

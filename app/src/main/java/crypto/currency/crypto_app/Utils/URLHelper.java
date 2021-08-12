@@ -5,4 +5,5 @@ public class URLHelper {
 
     public static final String coins = base+"/coins";
     public static final String coinstop_7 = base2+"/search/trending";
+    public static final String graph_data = base2+"/coins/ethereum/market_chart?vs_currency=USD&days=10&interval=daily";
 }

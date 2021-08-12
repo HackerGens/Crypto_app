@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,20 +26,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.snackbar.Snackbar;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import crypto.currency.crypto_app.Home_Frag.CoinsAdapter;
-import crypto.currency.crypto_app.Home_Frag.Coins_model;
 import crypto.currency.crypto_app.R;
-import crypto.currency.crypto_app.Utils.SharedHelper;
 import crypto.currency.crypto_app.Utils.URLHelper;
 import crypto.currency.crypto_app.Utils.VolleySingleton;
 
@@ -50,10 +43,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView_coins_top;
     private TopCoinsAdapter coins_adapter_top;
     public List<Top_coins_model> coinsList_top;
-
-
-
-
     ProgressDialog progressDialog;
     public HomeFragment() {
         // Required empty public constructor
@@ -72,43 +61,31 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
         progressDialog= new ProgressDialog(getActivity());
+        progressDialog.setMessage("Please wait...");
 
         // top coins list
-
         recyclerView_coins_top = root.findViewById(R.id.recycler_view_coins_top);
         coinsList_top = new ArrayList<>();
         coins_adapter_top = new TopCoinsAdapter(getActivity(), coinsList_top);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
-        recyclerView_coins_top.setLayoutManager(mLayoutManager);
-        recyclerView_coins_top.addItemDecoration(new HomeFragment.GridSpacingItemDecoration(1, dpToPx(1), true));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+        recyclerView_coins_top.setLayoutManager(layoutManager);
+        recyclerView_coins_top.addItemDecoration(new HomeFragment.GridSpacingItemDecoration(1, dpToPx(0), false));
         recyclerView_coins_top.setItemAnimator(new DefaultItemAnimator());
         recyclerView_coins_top.setAdapter(coins_adapter_top);
         coins_adapter_top.notifyDataSetChanged();
-
-
         //
 
         // coins list
         recyclerView_coins = root.findViewById(R.id.recycler_view_coins);
         coinsList = new ArrayList<>();
         coins_adapter = new CoinsAdapter(getActivity(), coinsList);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-        recyclerView_coins.setLayoutManager(layoutManager);
-        recyclerView_coins.addItemDecoration(new HomeFragment.GridSpacingItemDecoration(1, dpToPx(0), false));
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 1);
+        recyclerView_coins.setLayoutManager(mLayoutManager);
+        recyclerView_coins.addItemDecoration(new HomeFragment.GridSpacingItemDecoration(1, dpToPx(1), true));
         recyclerView_coins.setItemAnimator(new DefaultItemAnimator());
         recyclerView_coins.setAdapter(coins_adapter);
-
-//        coinsList.add(new Coins_model("Bitcoin", "US$38,230.05", "https://toppng.com/uploads/preview/bitcoin-png-bitcoin-logo-transparent-background-11562933997uxok6gcqjp.png", "$558.28","+1.29%"));
-//        coinsList.add(new Coins_model("Ethereum", "US$305,292,097,842", "https://mpng.subpng.com/20180802/jhk/kisspng-zcash-clip-art-cryptocurrency-portable-network-gra-ethereum-eth-cryptocurrency-png-clip-art-image-gal-5b638a7b055206.9657338615332501710218.jpg", "$583.28","+0.29%"));
-//        coinsList.add(new Coins_model("Tether", "US$61,986,751,352", "https://www.cryptonewspoint.com/wp-content/uploads/2020/01/Tether-01.png", "$483.18","+2.21%"));
-//        coinsList.add(new Coins_model("Binance Coin", "US$58,742,250,222", "https://icons.iconarchive.com/icons/cjdowner/cryptocurrency-flat/1024/Binance-Coin-BNB-icon.png", "$383.08","+1.00%"));
-//        coinsList.add(new Coins_model("Cardano", "US$53,646,388,494", "https://www.iconpacks.net/icons/2/free-cardano-coin-icon-2216-thumb.png", "$283.00","+2.29%"));
-//        coinsList.add(new Coins_model("Dogecoin", "$47,254,695,613", "https://image.pngaaa.com/186/326186-middle.png", "0 BTC","+1.50%"));
-//        coinsList.add(new Coins_model("XRP", "US$43,765,009,771", "https://res.cloudinary.com/geopayme/image/upload/f_auto,q_auto/v1585828404/ripple-coin.png", "$183.10","+1.29%"));
-
+        oneday_graph_data();
         all_coins();
-
         return root;
     }
 
@@ -201,11 +178,66 @@ public class HomeFragment extends Fragment {
                                         String marketRank    = obj2.getString("market_cap_rank");
                                         String btcPrice   = obj2.getString("price_btc");
                                      //  String btcPrice    = String.valueOf(btcPrice_int);
+                                        String alphaRefined = btcPrice.replaceAll("[^\\d-]", "");
+                                        String numberRefined = btcPrice.replaceAll("[^0-9.]", "");
 
-                                        coinsList_top.add(new Top_coins_model(name,"Rank "+marketRank,iconUrl,btcPrice+" BTC",symbol));
+                                        coinsList_top.add(new Top_coins_model(name,"Rank "+marketRank,iconUrl,numberRefined,symbol));
 
 
                                     }
+                                    progressDialog.dismiss();
+                                    coins_adapter_top.notifyDataSetChanged();
+                                }
+                            } else {
+                                progressDialog.dismiss();
+                                displayMessage(getString(R.string.SomethingWrong));
+                            }
+
+                        } catch (JSONException e) {
+                            displayMessage(getString(R.string.SomethingWrong));
+                            progressDialog.dismiss();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull VolleyError error) {
+                        displayMessage(getString(R.string.SomethingWrong));
+                        progressDialog.dismiss();
+                    }
+                });
+
+        VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
+    }
+
+    public void oneday_graph_data(){
+        ArrayList<Double> graph_datalist = new ArrayList<Double>();
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URLHelper.graph_data,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(@Nullable String response) {
+                        try {
+                            if (response != null) {
+                                JSONObject obj = new JSONObject(response);
+                                JSONArray jArray = obj.getJSONArray("prices");
+                                int length = jArray.length();
+                                if (String.valueOf(jArray.length()).equals("0")) {
+                                    progressDialog.dismiss();
+                                    displayMessage("Oops! no item were found");
+                                } else {
+                                    for (int i = 0; i < length; i++) {
+                                        JSONArray arrayInArray = jArray.getJSONArray(i);
+                                        for (int j = 0; j < arrayInArray.length(); j++) {
+                                            String graph_index = arrayInArray.getString(j);
+                                            Double db_data = Double.valueOf(graph_index);
+                                            graph_datalist.add(db_data);
+
+                                        }
+                                    }
+
+                                    Log.e("Here is", "" + graph_datalist);
                                     progressDialog.dismiss();
                                     coins_adapter_top.notifyDataSetChanged();
                                 }
@@ -278,6 +310,4 @@ public class HomeFragment extends Fragment {
             }
         }
     }
-
-
 }

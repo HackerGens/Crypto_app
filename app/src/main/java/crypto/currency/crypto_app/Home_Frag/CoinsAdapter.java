@@ -11,8 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -50,27 +54,18 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
         Double d = Double.valueOf(album.getCoins_Totalprice());
         Double d_btc = Double.valueOf(album.getCoins_price());
         holder.coins_price.setText(String.format("%.2f", d_btc)+" BTC");
-        holder.coins_Totalprice.setText(String.format("%.2f", d)+" $");
+        holder.coins_Totalprice.setText("$ "+String.format("%.2f", d));
+
+
         holder.coinsPercentage.setText(album.getCoins_percentage());
+        holder.marketcap_usd_text.setText(album.getMarket_cap_usd());
+        holder.marketcap_btc_text.setText(album.getMarket_cap_btc());
 
-        GlideToVectorYou
-                .init()
-                .with(mContext)
-                .setPlaceHolder(R.drawable.loading, R.drawable.loading)
-                .load(Uri.parse(album.getCoins_image()), holder.coins_pic);
-
+        Glide.with(mContext)
+                .load(album.getCoins_image())
+                .centerCrop()
+                .into(holder.coins_pic);
     }
-
-//    public static String getRoughNumber(long value) {
-//        if (value <= 999) {
-//            return String.valueOf(value);
-//        }
-//
-//        final String[] units = new String[]{"", "K", "M", "B", "P"};
-//        int digitGroups = (int) (Math.log10(value) / Math.log10(1000));
-//        return new DecimalFormat("#,##0.#").format(value / Math.pow(1000, digitGroups)) + "" + units[digitGroups];
-//
-//    }
 
     @Override
     public int getItemCount() {
@@ -78,7 +73,7 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView coins_name,coins_price,coins_Totalprice,coinsPercentage;
+        public TextView coins_name,coins_price,coins_Totalprice,coinsPercentage,marketcap_usd_text,marketcap_btc_text;
         public ImageView coins_pic;
 
         public MyViewHolder(@NonNull View view) {
@@ -87,6 +82,8 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
             coins_price = view.findViewById(R.id.pricetext);
             coins_Totalprice = view.findViewById(R.id.coinstprice);
             coinsPercentage = view.findViewById(R.id.percentagetext);
+            marketcap_usd_text = view.findViewById(R.id.marketcap_usd_text);
+            marketcap_btc_text = view.findViewById(R.id.marketcap_btc_text);
             coins_pic = view.findViewById(R.id.coinsimage);
             view.setOnClickListener(this);
             Context = view.getContext();
@@ -94,6 +91,8 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
 
         @Override
         public void onClick(View view) {
+             CoinsDetails_bootomsheet detailsfragment = new CoinsDetails_bootomsheet();
+            detailsfragment.show(((FragmentActivity) mContext).getSupportFragmentManager(),detailsfragment.getTag());
         }
     }
 

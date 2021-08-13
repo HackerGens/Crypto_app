@@ -19,4 +19,9 @@
         <item name="android:fontFamily">@font/regular</item>
     </style>
 
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slideup</item>
+        <item name="android:windowExitAnimation">@anim/slidedown</item>
+    </style>
+
 </resources>

@@ -98,38 +98,27 @@ public class HomeFragment extends Fragment {
                     public void onResponse(@Nullable String response) {
                         try {
                             if (response != null) {
-                                JSONObject obj = new JSONObject(response);
-                                String status = obj.getString("status");
-                                if (status.equals("success")) {
-                                    JSONObject obj2 = (JSONObject)obj.get("data");
-                                    JSONArray jArray = obj2.getJSONArray("coins");
-                                    int length = jArray.length();
-                                    if (String.valueOf(jArray.length()).equals("0")) {
-                                        progressDialog.dismiss();
-                                        displayMessage("Oops! no item were found");
-                                    } else {
-                                        for (int i = 0; i < length; i++) {
-                                            JSONObject jObj = jArray.getJSONObject(i);
-                                            String name = jObj.getString("name");
-                                            String symbol = jObj.getString("symbol");
-                                            String iconUrl    = jObj.getString("iconUrl");
-                                            String marketCap    = jObj.getString("marketCap");
-                                            String price    = jObj.getString("price");
-                                            String rank    = jObj.getString("rank");
-                                            String twentyhVolume    = jObj.getString("24hVolume");
-                                            String btcPrice    = jObj.getString("btcPrice");
+                                JSONArray jArray = new JSONArray(response);
+                                int length = jArray.length();
+                                for (int i = 0; i < length; i++) {
+                                    JSONObject obj = jArray.getJSONObject(i);
+                                    String id = obj.getString("id");
+                                    String symbol = obj.getString("symbol");
+                                    String name = obj.getString("name");
 
-                                            coinsList.add(new Coins_model(name, price, iconUrl, btcPrice,"+1.29%"));
+                                    JSONObject obj2 = (JSONObject)obj.get("image");
+                                    String iconUrl = obj2.getString("large");
+                                    JSONObject obj3 = (JSONObject)obj.get("market_data");
+                                    JSONObject obj4 = (JSONObject)obj3.get("current_price");
+                                    JSONObject obj5 = (JSONObject)obj3.get("market_cap");
+                                    String market_cap_usd = obj5.getString("usd");
+                                    String market_cap_btc = obj5.getString("btc");
+                                    String btc = obj4.getString("btc");
+                                    String usd = obj4.getString("usd");
 
-                                        }
-                                        progressDialog.dismiss();
-                                        coins_adapter.notifyDataSetChanged();
-                                    }
-                                } else {
-
-                                    progressDialog.dismiss();
-                                    displayMessage("Oops! no item were found");
+                                    coinsList.add(new Coins_model(id,name, usd, iconUrl, btc,"+1.29%","$ "+market_cap_usd,market_cap_btc+" BTC"));
                                 }
+                                coins_adapter.notifyDataSetChanged();
                             } else {
                                 progressDialog.dismiss();
                                 displayMessage("Oops! Some thing went wrong");

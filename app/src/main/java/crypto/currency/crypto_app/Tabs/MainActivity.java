@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import com.google.android.material.tabs.TabLayout;
 
 import crypto.currency.crypto_app.R;
+import crypto.currency.crypto_app.Utils.MyService;
 
 public class MainActivity extends AppCompatActivity {
     TabLayout tabLayout;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-        
+
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         tabLayout=(TabLayout)findViewById(R.id.tabLayout);
@@ -79,5 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startService(new Intent(getBaseContext(), MyService.class));
     }
 }

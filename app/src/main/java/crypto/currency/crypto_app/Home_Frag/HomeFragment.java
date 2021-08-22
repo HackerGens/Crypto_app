@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView_coins;
     private CoinsAdapter coins_adapter;
     public List<Coins_model> coinsList;
-
+    String coin,currency;
     private RecyclerView recyclerView_coins_top;
     private TopCoinsAdapter coins_adapter_top;
     public List<Top_coins_model> coinsList_top;
@@ -84,7 +84,6 @@ public class HomeFragment extends Fragment {
         recyclerView_coins.addItemDecoration(new HomeFragment.GridSpacingItemDecoration(1, dpToPx(1), true));
         recyclerView_coins.setItemAnimator(new DefaultItemAnimator());
         recyclerView_coins.setAdapter(coins_adapter);
-        oneday_graph_data();
         all_coins();
         return root;
     }
@@ -174,59 +173,6 @@ public class HomeFragment extends Fragment {
 
 
                                     }
-                                    progressDialog.dismiss();
-                                    coins_adapter_top.notifyDataSetChanged();
-                                }
-                            } else {
-                                progressDialog.dismiss();
-                                displayMessage(getString(R.string.SomethingWrong));
-                            }
-
-                        } catch (JSONException e) {
-                            displayMessage(getString(R.string.SomethingWrong));
-                            progressDialog.dismiss();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull VolleyError error) {
-                        displayMessage(getString(R.string.SomethingWrong));
-                        progressDialog.dismiss();
-                    }
-                });
-
-        VolleySingleton.getInstance(getActivity()).addToRequestQueue(stringRequest);
-    }
-
-    public void oneday_graph_data(){
-        ArrayList<Double> graph_datalist = new ArrayList<Double>();
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, URLHelper.graph_data,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(@Nullable String response) {
-                        try {
-                            if (response != null) {
-                                JSONObject obj = new JSONObject(response);
-                                JSONArray jArray = obj.getJSONArray("prices");
-                                int length = jArray.length();
-                                if (String.valueOf(jArray.length()).equals("0")) {
-                                    progressDialog.dismiss();
-                                    displayMessage("Oops! no item were found");
-                                } else {
-                                    for (int i = 0; i < length; i++) {
-                                        JSONArray arrayInArray = jArray.getJSONArray(i);
-                                        for (int j = 0; j < arrayInArray.length(); j++) {
-                                            String graph_index = arrayInArray.getString(j);
-                                            Double db_data = Double.valueOf(graph_index);
-                                            graph_datalist.add(db_data);
-
-                                        }
-                                    }
-
-                                    Log.e("Here is", "" + graph_datalist);
                                     progressDialog.dismiss();
                                     coins_adapter_top.notifyDataSetChanged();
                                 }

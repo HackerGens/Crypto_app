@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import crypto.currency.crypto_app.Home_Frag.HomeFragment;
+import crypto.currency.crypto_app.Exchange_Frag.ExchangeFragment;
 import crypto.currency.crypto_app.SettingsFragment;
 
 public class TabsAdapter extends FragmentPagerAdapter {
@@ -28,8 +29,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
                 HomeFragment homeFragment = new HomeFragment();
                 return homeFragment;
                 case 1:
-                SettingsFragment dappsFragment = new SettingsFragment();
-                return dappsFragment;
+                ExchangeFragment exchangeFragment = new ExchangeFragment();
+                return exchangeFragment;
                 case 2:
                 SettingsFragment dexFragment = new SettingsFragment();
                 return dexFragment;

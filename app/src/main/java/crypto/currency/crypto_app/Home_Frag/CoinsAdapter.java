@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import crypto.currency.crypto_app.R;
+import crypto.currency.crypto_app.Utils.SharedHelper;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder> {
@@ -60,6 +61,7 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
         holder.coinsPercentage.setText(album.getCoins_percentage());
         holder.marketcap_usd_text.setText(album.getMarket_cap_usd());
         holder.marketcap_btc_text.setText(album.getMarket_cap_btc());
+        holder.coin_id = album.getCoins_id();
 
         Glide.with(mContext)
                 .load(album.getCoins_image())
@@ -75,6 +77,7 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView coins_name,coins_price,coins_Totalprice,coinsPercentage,marketcap_usd_text,marketcap_btc_text;
         public ImageView coins_pic;
+        String coin_id;
 
         public MyViewHolder(@NonNull View view) {
             super(view);
@@ -91,6 +94,8 @@ public class CoinsAdapter extends RecyclerView.Adapter<CoinsAdapter.MyViewHolder
 
         @Override
         public void onClick(View view) {
+            SharedHelper.putKey(mContext,"coin_name",coin_id);
+            SharedHelper.putKey(mContext,"currency","usd");
              CoinsDetails_bootomsheet detailsfragment = new CoinsDetails_bootomsheet();
             detailsfragment.show(((FragmentActivity) mContext).getSupportFragmentManager(),detailsfragment.getTag());
         }
